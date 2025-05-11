@@ -1,0 +1,38 @@
+# R and Jupyter cache files
+*.RData
+*.RHistory
+__pycache__/
+*.ipynb_checkpoints/
+
+# Application and untracked data folders
+Application Materials/
+Globus_Extract/
+
+# Only ignore specific folders inside Mortality
+Data/Mortality/MULT*/
+Data/Mortality/*USPSAllCnty/
+Data/Mortality/Record_Layouts/*
+Data/Mortality/Mortality_Unnested/Mort2018US.AllCnty.txt
+Data/Mortality/Mortality_Unnested/MULT2019US.AllCnty.txt
+Data/Mortality/Mortality_Unnested/MULT*.USAllCnty.txt
+Data/Mortality/Mortality_Unnested/MULT*.AllCnty.txt
+
+
+# PRISM Temperature directories (entire raster folders)
+PRISM_tmean_stable_4kmD2_*0101_*1231_bil/
+
+# Processed output files
+**/analysis_data.csv
+monthly_*.csv
+monthly_*.xlsx
+
+#largefiles
+
+Data/Counties_Boundaries/tl_2019_us_county/tl_2019_us_county.shp
+Data/Population_Data/us.1969_2023.20ages.adjusted/us.1969_2023.20ages.adjusted.txt
+Data/Population_Data/us.1990_2023.20ages.adjusted.expanded/us.1990_2023.20ages.adjusted.txt
+
+
+Data/Counties_Boundaries/tl_2019_us_county/tl_2019_us_county.shp
+Data/Population_Data/us.1969_2023.20ages.adjusted/us.1969_2023.20ages.adjusted.txt
+Data/Population_Data/us.1990_2023.20ages.adjusted.expanded/us.1990_2023.20ages.adjusted.txt

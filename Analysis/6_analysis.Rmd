@@ -1,0 +1,234 @@
+---
+title: "analysis"
+author: "Yegor Baranovski"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+```{r}
+#LINEAR REGRESSION
+library(data.table)
+library(fixest)
+library(stringr)
+
+base_dir <- getwd()
+input_path <- file.path(base_dir, "Analysis_Data", "analysis_data.csv")
+output_path <- file.path(base_dir, "lin_regression_summary.csv")
+
+df <- fread(
+  input_path,
+  colClasses = c(
+    fips        = "character",
+    Urban       = "character",
+    year        = "integer",
+    month       = "integer",
+    Attribute   = "character",
+    Deaths      = "integer",
+    Population  = "integer",
+    EHDs        = "integer",
+    post_icd10  = "integer"
+  )
+)
+
+#pad FIPS codes and construct fixed effects identifiers
+df[, fips := str_pad(fips, 5, pad = "0")]
+df[, county_month := paste0(fips, "_", month)]
+df[, county_year  := paste0(fips, "_", year)]
+df[, year_month   := paste0(year,  "_", month)]
+
+#define region filters
+regions <- list(
+  All   = expression(TRUE),
+  Urban = expression(Urban == "1.0"),
+  Rural = expression(Urban == "0.0")
+)
+
+#define subgroup filters
+subgroups <- list(
+  `Full Population` = expression(Attribute == "Total"),
+  Male              = expression(Attribute == "M"),
+  Female            = expression(Attribute == "F"),
+  `Age 0–24`        = expression(Attribute == "0-24"),
+  `Age 25–64`       = expression(Attribute == "25-64"),
+  `Age 65+`         = expression(Attribute == "65+"),
+  `White/NH`        = expression(Attribute == "white/non-hispanic"),
+  `NW/Hispanic`     = expression(Attribute == "non-white/hispanic"),
+  `HS or less`      = expression(Attribute == "HS_or_less"),
+  `College+`        = expression(Attribute == "SomeColl_or_more")
+)
+
+#merge in 2000 population weights
+pop2000 <- df[year == 2000 & Attribute == "Total", .(pop2000 = Population[1]), by = fips]
+df <- merge(df, pop2000, by = "fips", all.x = TRUE)
+
+results <- list()
+
+#loop through combinations and run models
+for (rn in names(regions)) {
+  for (sn in names(subgroups)) {
+    cat("Running model for Region =", rn, " Subgroup =", sn, "...\n")
+    dt <- df[eval(regions[[rn]]) & eval(subgroups[[sn]])]
+    if (nrow(dt) == 0) next
+
+    est <- feols(
+      rate_per_million ~ EHDs 
+        | county_month + county_year + year_month,
+      cluster = ~fips,
+      weights = ~pop2000,
+      data = dt
+    )
+
+    b     <- coef(est)["EHDs"]
+    se    <- se(est)["EHDs"]
+    pval  <- 2 * (1 - pnorm(abs(b / se)))
+    stars <- ifelse(pval < 0.01, "***",
+                    ifelse(pval < 0.05, "**",
+                           ifelse(pval < 0.1, "*", "")))
+
+    results[[paste(rn, sn)]] <- data.table(
+      Region   = rn,
+      Subgroup = sn,
+      Estimate = round(b, 3),
+      SE       = round(se, 3),
+      p_value  = round(pval, 3),
+      Stars    = stars,
+      N        = nobs(est)
+    )
+  }
+}
+
+#combine into a single data.table
+df_results <- rbindlist(results)
+
+print(df_results)
+fwrite(df_results, output_path)
+
+
+
+```
+
+
+
+
+```{r}
+#POISSON REGRESSION
+library(data.table)
+library(fixest)
+library(stringr)
+
+base_dir <- getwd()
+input_path <- file.path(base_dir, "Analysis_Data", "analysis_data.csv")
+output_path <- file.path(base_dir, "poisson_regression_summary.csv")
+
+
+
+df <- fread(
+  input_path,
+  colClasses = c(
+    fips        = "character",
+    Urban       = "character",
+    year        = "integer",
+    month       = "integer",
+    Attribute   = "character",
+    Deaths      = "integer",
+    Population  = "integer",
+    EHDs        = "integer",
+    post_icd10  = "integer"
+  )
+)
+df[, fips := str_pad(fips, 5, pad = "0")]
+
+#fixed-effect keys
+df[, county_month := paste0(fips, "_", month)]
+df[, county_year  := paste0(fips, "_", year)]
+df[, year_month   := paste0(year,  "_", month)]
+
+# regions & subgroups
+regions <- list(
+  All   = expression(TRUE),
+  Urban = expression(Urban == "1.0"),
+  Rural = expression(Urban == "0.0")
+)
+subgroups <- list(
+  `Full Population` = expression(Attribute == "Total"),
+  Male              = expression(Attribute == "M"),
+  Female            = expression(Attribute == "F"),
+  `Age 0–24`        = expression(Attribute == "0-24"),
+  `Age 25–64`       = expression(Attribute == "25-64"),
+  `Age 65+`         = expression(Attribute == "65+"),
+  `White/NH`        = expression(Attribute == "white/non-hispanic"),
+  `NW/Hispanic`     = expression(Attribute == "non-white/hispanic"),
+  `HS or less`      = expression(Attribute == "HS_or_less"),
+  `College+`        = expression(Attribute == "SomeColl_or_more")
+)
+
+#baseline pop in 2000
+pop2000 <- df[year == 2000 & Attribute == "Total",
+              .(pop2000 = Population[1]),
+              by = fips]
+df <- merge(df, pop2000, by = "fips", all.x = TRUE)
+
+#loop & Poisson‐FE
+results_pois <- list()
+for (rn in names(regions)) {
+  for (sn in names(subgroups)) {
+    cat("Running Poisson FE for Region =", rn, " Subgroup =", sn, "...\n")
+    dt <- df[ eval(regions[[rn]]) & eval(subgroups[[sn]]) ]
+    if (nrow(dt) == 0) {
+      warning("  -> skipping ", rn, "/", sn, ": no rows")
+      next
+    }
+
+est_poi <- feglm(
+  Deaths  ~ EHDs
+    | county_month + county_year + year_month,
+  family  = "poisson",
+  offset  = ~ log(Population),
+  weights = ~ pop2000,
+  cluster = ~ fips,
+  data    = dt
+)
+
+#extract log‐IRR and convert
+b_log    <- coef(est_poi)["EHDs"]
+se_log   <- se(est_poi)["EHDs"]
+ci_log   <- confint(est_poi)["EHDs", ]
+irr      <- exp(b_log)
+irr_low  <- exp(ci_log[1])
+irr_high <- exp(ci_log[2])
+n_obs    <- nobs(est_poi)
+
+results_pois[[paste(rn, sn)]] <- data.table(
+  Region     = rn,
+  Subgroup   = sn,
+  logIRR     = b_log,
+  SE_log     = se_log,
+  IRR        = irr,
+  CI_low_IRR = irr_low,
+  CI_high_IRR= irr_high,
+  N          = n_obs
+)
+
+  }
+}
+
+# combine & save
+df_pois <- rbindlist(results_pois)
+fwrite(df_pois, output_path)
+print(df_pois)
+
+
+```
+
+
+```{r}
+baseline_rate <- df[Attribute == "Total", sum(Deaths) / sum(Population) * 1e6]
+print(baseline_rate)
+
+```
+
+

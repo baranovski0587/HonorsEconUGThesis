@@ -1,0 +1,3 @@
+PRISM temperature data can be found here: https://prism.oregonstate.edu/recent/
+
+place yearly files here (ex: PRISM_tmean_stable_4kmD2_20110101_20111231_bil)
