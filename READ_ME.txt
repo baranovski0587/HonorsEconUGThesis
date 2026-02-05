@@ -1,4 +1,4 @@
-Everything here represents ~300 hours of work including research, reading, brainstorming, data gathering, data processing, more research, debugging, analysis, and writing.
+Everything here represents ~350+ hours of work including research, reading, brainstorming, data gathering, data processing, more research, debugging, analysis, and writing.
 Code is not fully optimized and fairly amateurish, self-taught largely for research purposes bare with me :/
 
 Code Order:
