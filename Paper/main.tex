@@ -197,6 +197,8 @@ This paper contributes a unique approach in quantifying the relationship between
 
 First, to more comprehensively capture mental health--related mortality, I define mental health--related deaths to include not only suicides but also deaths classified as injuries of undetermined intent and certain types of accidental deaths (such as poisoning, firearm, train, and drowning incidents), defined further in Section 2.2. This broader definition addresses the known problem of misclassification in mortality data \cite{MHClassification}, where some suicides may be recorded as accidents due to reporting practices or legal ambiguity. By including categories plausibly linked to underlying mental health crises, this approach provides a more complete measure of the population--level impact of extreme heat on mental health, improving power. I use suicide risk and mental health mortality in this paper interchangeably.
 
+Figure \ref{fig:suicide_map} illustrates the geographic distribution of average monthly suicide rates across U.S. counties. The map reveals substantial spatial heterogeneity: counties in the Mountain West and Great Plains, particularly in Montana, Wyoming, Colorado, Nevada, and New Mexico, exhibit the highest average rates, often exceeding 30 deaths per million residents per month, while counties in the Northeast and upper Midwest tend to have considerably lower rates (gray counties are suppressed due to small death counts). This geographic pattern closely mirrors the urban--rural divide, as many high--rate counties are sparsely populated rural areas, motivating the urban--rural comparisons pursued in this paper.
+
 \begin{figure}[H]
     \centering
     \caption{Average Monthly Suicide Rate(Deaths per Million) by County}
@@ -206,6 +208,8 @@ First, to more comprehensively capture mental health--related mortality, I defin
 
 Second, I define extreme heat exposure using both relative and absolute threshold criteria, rather than relying solely on simple temperature averages. Specifically, I calculate extreme heat days (EHDs) as the number of days in a month where the daily mean temperature exceeds either the 85th percentile of the 30--year historical monthly distribution for a given county or a daily mean temperature threshold of $30\degree$C. This dual--definition approach contextualizes "extreme" relative to local climatological norms and human acclimation \cite{periard2016} while also accounting for objective human physiological tolerance levels, enabling more meaningful comparisons across regions and over time, and better capturing the types of heat events most relevant to health outcomes.
 
+Figure \ref{fig:thresholds_map} maps the resulting 85th--percentile temperature thresholds for each county, averaged across summer months. The thresholds range from approximately 23$\degree$C in the Pacific Northwest and northern Great Plains to nearly 29$\degree$C across the Gulf Coast, Texas, and the Southeast. This wide variation underscores why a locally--defined relative threshold is essential: a daily mean temperature of 27$\degree$C would qualify as an extreme heat day in much of the northern United States but would fall well below the threshold in the South. By combining this relative measure with the absolute 30$\degree$C criterion, the EHD definition captures both locally anomalous heat and objectively dangerous temperatures.
+
 \begin{figure}[H]
     \centering
     \caption{Average Summer Percentile Thresholds(°C) by County}
@@ -214,6 +218,8 @@ Second, I define extreme heat exposure using both relative and absolute threshol
 \end{figure}
 
 Third, the estimated effects presented in this paper represent a lower bound on the true impact of temperature on mental health--related mortality. By defining extreme heat days using relatively high thresholds, either exceeding the 85th percentile of historical daily temperatures or surpassing $30\degree$C, this approach focuses on only the most severe temperature exposures. However, milder but still abnormal heat events, as well as cumulative heat stress from sustained periods of moderately high temperatures, may also contribute to adverse mental health outcomes \cite{HandHWHO}. As such, the full burden of heat on mental health could be even larger than what is captured by the estimates reported here.
+
+Figure \ref{fig:trends} presents time trends in suicide rates and extreme heat days, separately for urban and rural counties. Panel (a) shows that monthly suicide rates have risen steadily over the study period, climbing from roughly 12 per million in urban areas and 19 per million in rural areas to approximately 33 and 37 per million, respectively, by 2019; rural counties consistently exhibit higher rates. Panel (b) plots annual summer EHD counts, which are highly volatile year to year, fluctuating between roughly 4 and 28 days per summer with notable spikes around 1998--1999 and 2010--2012. Urban counties tend to experience slightly more EHDs than rural counties, consistent with the urban heat island effect. The absence of a strong secular trend in EHDs reflects the percentile--based threshold definition, which is calibrated to the long--run distribution for each county--month; this is a desirable property for the identification strategy, as discussed in Section 2.5.
 
 \begin{figure}[H]
     \centering
@@ -245,13 +251,13 @@ County--level population data was used to calculate death rates and for regressi
 Data on monthly health related deaths at the county level are derived from the restricted use Detailed Mortality--All County data; part of the Vital Statistics Data maintained by the NCHS and can become available via request and application from the Centers for Disease Control \cite{nchsRestrictedData2021}. The raw data acquired includes every death reported in the United States between 1989 and 2019, along with the primary cause of each. Cause of death was used to categorize deaths as mental health related if they were caused by suicide, injuries of undetermined intent, or accidental poisoning, firearm, train, or drowning, explicitly detailed in table \ref{tab:mentalhealth_icd} \cite{MHClassification}. For a given county in a given summer month each year, I counted the number of mental health related deaths, both overall and by subgroup. The set of subgroups includes sex (M,F), age (0--24, 25--64, 65+), race/origin (White and non--Hispanic, non--White or Hispanic), and educational attainment (high school diploma or less, some college credit or more). Analysis for educational attainment was limited to 25+ adults, as younger people may not have had time to get a college education. Group specific deaths rates are calculated in terms of number of deaths per million using group -- specific population counts. All figures suppressed counties that observed fewer than 10 total or subgroup mental health related deaths for the study period but are still included in the analysis.
 
 \subsection{Temperature Data}
-Temperature data was obtained from the PRISM Climate Group \cite{prismClimate2022}, which reports high resolution gridded climate data. The PRISM data contains 4km by 4km gridded estimates of daily average temperature for the United States for from 1989--2019. I aggregated the daily average temperature data to the county level and then mapped the set of daily average county temperatures in a given month and year to the number of extreme heat days (described below in 2.5).
+Temperature data was obtained from the PRISM Climate Group \cite{prismClimate2022}, which reports high resolution gridded climate data. The PRISM data contains 4km by 4km gridded estimates of daily average temperature for the United States from 1989--2019. I aggregated the daily average temperature data to the county level and then mapped the set of daily average county temperatures in a given month and year to the number of extreme heat days (described below in 2.5).
 
 \subsection{Urbanization Classification}
 Counties are classified as urban or rural according to the 2013 NCHS Urban--Rural Classification Scheme \cite{nchsUrbanRural2013}. This system assigns each county to one of six categories based on its level of urbanization. For my analysis, I define urban counties as those falling into the top three categories: large central metro, large fringe metro, and medium metro. Counties in the bottom three categories -- small metro, micropolitan, and noncore -- are considered rural.
 
 \subsection{Empirical Approach}
-I use a panel fixed effects regression to estimate the effect of smoke exposure on suicide rates:
+I use a panel fixed effects regression to estimate the effect of extreme heat exposure on suicide rates:
 \[
 Y_{cym} =  \beta\cdot\text{EHD}_{cym} + \delta_{cm} +\delta_{cy} +\delta_{ym} +\epsilon_{cym},
 \]
@@ -262,7 +268,7 @@ $Y_{cym}$ is the defined suicide rate with deaths by suicide per million in coun
 
 
 \section{Results}
-I begin by presenting the estimated relationship between EHDs and suicide rates based on the baseline fixed effects regression model described in section 2.5.
+I begin by presenting the estimated relationship between EHDs and suicide rates based on the baseline fixed effects regression model described in section 2.5. Figure \ref{fig:lin_results} summarizes the linear regression estimates across population subgroups and area types. The markers indicate point estimates and the lines denote 95\% confidence intervals; each estimate is drawn from a separate regression using population subgroup--specific suicide rates in the indicated sample of counties. ``White/NH'' refers to those who are White and non--Hispanic, and ``NW/Hispanic'' is the converse (non--White or Hispanic). ``HS or less'' refers to adults 25 years and older with a high school diploma or less, and ``College+'' refers to adults 25 years and older with some college credits or more.
 
 \begin{figure}[ht]
     \centering
@@ -270,14 +276,15 @@ I begin by presenting the estimated relationship between EHDs and suicide rates 
     \includegraphics[width=\textwidth]{lin_results.png}
     \label{fig:lin_results}
 \end{figure}
-The markers indicate point estimates while the lines the 95\% CI estimates of the indicated relationships. Estimates for each population subgroup and area type are taken from separate regressions based on population subgroup--specific suicide rates in the indicated sample of counties. “White/NH” refers to those who are White and non--Hispanic, and “NW/Hispanic” is the converse (non--White or Hispanic). “HS or less” refers to adults 25 years and older with a high school diploma or less, and “College+” refers to adults 25 years and older with some college credits or more. 
+
+For the full population, one additional EHD in a summer month is associated with an increase of approximately 0.091 suicide deaths per million residents, corresponding to a 0.39\% rise relative to the baseline monthly rate. This effect is statistically significant at the 1\% level and is remarkably consistent across urban (0.089) and rural (0.093) counties. Among demographic subgroups, the effect is largest for men (0.154 per million) and working--age adults aged 25--64 (0.123 per million), both groups that already face elevated baseline suicide risk. In contrast, the estimated effect for women (0.029) is smaller in magnitude and only marginally significant, while the estimate for adults aged 65 and above (0.068) is imprecisely estimated, particularly in rural areas where confidence intervals are wide. Across racial and ethnic groups, both White/non--Hispanic and non--White/Hispanic populations show positive and significant effects overall, though rural estimates for the latter group carry substantial uncertainty. The educational attainment results are mixed: urban counties show a significant effect among those with a high school diploma or less (0.127), while the rural estimate for the same group is near zero and statistically insignificant, likely reflecting small sample sizes in rural education--stratified cells.
 
 For robustness, results were validated using Poisson regression models, where coefficients capture proportional changes rather than absolute changes in suicide rates. The Poisson models produced similar directional findings across subgroups, although the magnitudes of the effects differed somewhat between urban and rural counties. These differences likely reflect the influence of lower baseline suicide rates in certain areas, which can affect proportional versus absolute change estimates. Overall, the consistency in the direction of effects across specifications reinforces the robustness of the main findings. Results are more unstable among rural areas due to count sizes. Regression estimates and mean suicide rates for each subgroup are reported in the Appendix, tables \ref{tab:lin_reg_summary} and \ref{tab:poisson_reg_summary}.
 
 
 \section{Discussion}
 
-My results demonstrate that exposure to EHDs increases suicide mortality in the United States. I estimate that one additional EHD in a summer month leads to an increase of 0.091 suicide deaths per million residents. This corresponds to a 0.39\% rise relative to the baseline monthly suicide rate of 23.66 per million. While modest in absolute terms, this effect may accumulate meaningfully as extreme heat events become more frequent and intense under climate change, and with our definition of an EHD, this may serve as a possible lower bound. The economic implications are also significant, given the high direct and indirect costs associated with suicide and mental health--related deaths.
+The results presented above demonstrate that exposure to extreme heat days increases suicide mortality in the United States. The estimated effect of 0.091 additional deaths per million per EHD, or equivalently a 0.39\% rise relative to the baseline monthly rate of 23.66 per million, is modest in absolute terms but may accumulate meaningfully as extreme heat events become more frequent and intense under climate change. Moreover, because the EHD definition employed here captures only the most severe temperature exposures, these estimates likely represent a lower bound on the true impact. The economic implications are also significant, given the high direct and indirect costs associated with suicide and mental health--related deaths.
 
 The effect is slightly more pronounced in rural populations and among demographic groups with elevated baseline suicide risk, including men and working--age adults. These findings suggest that extreme heat may exacerbate existing vulnerabilities, potentially widening existing mental health disparities.
 
@@ -300,7 +307,7 @@ Future research should expand upon this work by examining the effects of tempera
 
 \enlargethispage{\baselineskip}
 \section{Replication}
-This analysis relies on the Restricted--Use Vital Statistics Data from the Centers for Disease Control and Prevention. Access to this data can be obtained by following the instructions at which can be found here: \cite{nchsRestrictedData2021}. Other public data and my code can be found \href{https://github.com/baranovski0587/HonorsEconUGThesis}{here}.
+This analysis relies on the Restricted--Use Vital Statistics Data from the Centers for Disease Control and Prevention. Access to this data can be obtained by following the instructions found here: \cite{nchsRestrictedData2021}. Other public data and my code can be found \href{https://github.com/baranovski0587/HonorsEconUGThesis}{here}.
 \newpage
 \section{Appendix}
 \appendix
