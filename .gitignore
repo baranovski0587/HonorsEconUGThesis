@@ -32,7 +32,14 @@ Data/Counties_Boundaries/tl_2019_us_county/tl_2019_us_county.shp
 Data/Population_Data/us.1969_2023.20ages.adjusted/us.1969_2023.20ages.adjusted.txt
 Data/Population_Data/us.1990_2023.20ages.adjusted.expanded/us.1990_2023.20ages.adjusted.txt
 
-
-Data/Counties_Boundaries/tl_2019_us_county/tl_2019_us_county.shp
-Data/Population_Data/us.1969_2023.20ages.adjusted/us.1969_2023.20ages.adjusted.txt
-Data/Population_Data/us.1990_2023.20ages.adjusted.expanded/us.1990_2023.20ages.adjusted.txt
+# LaTeX build artifacts
+*.aux
+*.bbl
+*.blg
+*.fdb_latexmk
+*.fls
+*.log
+*.out
+*.toc
+*.synctex.gz
+Paper/main.pdf
