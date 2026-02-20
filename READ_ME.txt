@@ -1,3 +1,11 @@
+Heat, Health, and Harm: The Impact of Extreme Temperatures on Suicide
+Honors Economics Undergraduate Thesis, UW-Madison (2025)
+Yegor Baranovski
+
+This paper estimates the causal effect of extreme heat on suicide mortality in the United States from 1989-2019 using county-level data and a fixed-effects identification strategy. An additional extreme heat day in a summer month increases suicide deaths by approximately 0.091 per million residents, with effects concentrated among men and working-age adults.
+
+---
+
 Everything here represents ~350+ hours of work including research, reading, brainstorming, data gathering, data processing, more research, debugging, analysis, and writing.
 Code is not fully optimized and fairly amateurish, self-taught largely for research purposes bare with me :/
 
