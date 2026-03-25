@@ -3,7 +3,7 @@
 **Yegor Baranovski**
 Honors Economics Undergraduate Thesis, University of Wisconsin--Madison (2025)
 
-[[Paper (PDF)]](Heat-Health-and-Harm.pdf)
+[Paper (PDF)](Heat-Health-and-Harm.pdf)
 
 ---
 
@@ -14,10 +14,10 @@ This paper estimates the **causal effect of extreme heat on suicide mortality** 
 ### Key Findings
 
 - **One additional extreme heat day** in a summer month increases the monthly suicide rate by **0.091 deaths per million** residents (a **0.39%** increase relative to baseline).
-- Effects are **concentrated among men** (0.154 per million) and **working-age adults** aged 25--64 (0.123 per million)--groups already characterized by elevated baseline suicide risk.
+- Effects are **concentrated among men** (0.154 per million) and **working-age adults** aged 25-64 (0.123 per million)-groups already characterized by elevated baseline suicide risk.
 - Results are **remarkably consistent across urban and rural counties** (0.089 vs. 0.093 per million).
 - Findings are robust to alternative specifications, including Poisson regression models.
-- Because the EHD definition captures only the most severe temperature exposures, these estimates represent a **lower bound** on the true impact.
+- Because the EHD definition captures only the most severe temperature exposures, these estimates represent a possible **lower bound** on the true impact.
 
 ## Methodology
 
