@@ -3,7 +3,7 @@
 **Yegor Baranovski**
 Honors Economics Undergraduate Thesis, University of Wisconsin--Madison (2025)
 
-[Paper (PDF)](Heat-Health-and-Harm.pdf)
+[Paper (PDF)](https://github.com/baranovski0587/heat-health-harm/raw/main/Heat-Health-and-Harm.pdf)
 
 ---
 
